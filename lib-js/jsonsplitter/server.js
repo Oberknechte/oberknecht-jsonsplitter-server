@@ -41,7 +41,9 @@ class jsonsplitterServer extends oberknecht_jsonsplitter_1.jsonsplitter {
                 `wsserver-ws-${wsSym}`,
                 `wsserver-ws-${wsSym}-connection`,
             ], ws);
-            wsData[wsSym] = {};
+            wsData[wsSym] = {
+                heartbeat: {},
+            };
             function sendWC(stuff, status) {
                 let stuff_ = {};
                 if (typeof stuff === "object")
@@ -164,9 +166,10 @@ class jsonsplitterServer extends oberknecht_jsonsplitter_1.jsonsplitter {
                     ws?.close();
                 if (wsData[wsSym]?.heartbeat?.heartbeatInterval)
                     clearInterval(wsData[wsSym].heartbeat.heartbeatInterval);
-                delete wsData[wsSym];
+                if (wsData[wsSym])
+                    delete wsData[wsSym];
             }
-            wsData[wsSym].heartbeatInterval = setInterval(() => {
+            wsData[wsSym].heartbeat.heartbeatInterval = setInterval(() => {
                 if (!wsData[wsSym].heartbeat)
                     wsData[wsSym].heartbeat = {};
                 if ((wsData[wsSym].heartbeat.pingsPending ?? 0) >=

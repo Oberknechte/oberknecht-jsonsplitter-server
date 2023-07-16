@@ -1,6 +1,6 @@
 {
   "name": "oberknecht-jsonsplitter-server",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "main": "export",
   "scripts": {
@@ -20,7 +20,7 @@
   "dependencies": {
     "oberknecht-emitters": "^1.0.6",
     "oberknecht-jsonsplitter": "^1.0.9",
-    "oberknecht-utils": "^1.4.2",
+    "oberknecht-utils": "^1.4.3",
     "ws": "^8.13.0"
   },
   "devDependencies": {

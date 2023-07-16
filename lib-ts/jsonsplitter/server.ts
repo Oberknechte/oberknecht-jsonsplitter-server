@@ -54,7 +54,10 @@ export class jsonsplitterServer extends jsonsplitter {
         ],
         ws
       );
-      wsData[wsSym] = {};
+
+      wsData[wsSym] = {
+        heartbeat: {},
+      };
 
       function sendWC(stuff: Record<string, any> | any, status?: number) {
         let stuff_: Record<string, any> = {};
@@ -205,10 +208,10 @@ export class jsonsplitterServer extends jsonsplitter {
         if (wsData[wsSym]?.heartbeat?.heartbeatInterval)
           clearInterval(wsData[wsSym].heartbeat.heartbeatInterval);
 
-        delete wsData[wsSym];
+        if (wsData[wsSym]) delete wsData[wsSym];
       }
 
-      wsData[wsSym].heartbeatInterval = setInterval(() => {
+      wsData[wsSym].heartbeat.heartbeatInterval = setInterval(() => {
         if (!wsData[wsSym].heartbeat) wsData[wsSym].heartbeat = {};
         if (
           (wsData[wsSym].heartbeat.pingsPending ?? 0) >=
