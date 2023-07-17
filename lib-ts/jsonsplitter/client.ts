@@ -81,7 +81,8 @@ export class jsonsplitterClient {
     type?: string,
     parameters?: any,
     stuff?: Record<string, any>,
-    noReject?: boolean
+    noReject?: boolean,
+    transportDetails?: boolean
   ) => {
     return new Promise((resolve, reject) => {
       this.sendWC({
@@ -92,7 +93,7 @@ export class jsonsplitterClient {
         .then((r: Record<string, any>) => {
           if (r.error && !noReject) return reject(r.error);
 
-          resolve(r);
+          resolve(transportDetails ? r : r.response);
         })
         .catch(reject);
     });
@@ -166,60 +167,76 @@ export class jsonsplitterClient {
     );
   };
 
-  getKeySync = (keypath: string | string[], noReject?: boolean) => {
+  getKeySync = (
+    keypath: string | string[],
+    noReject?: boolean,
+    transportDetails?: boolean
+  ) => {
     return this.sendType(
       "getKeySync",
       [convertToArray(keypath)],
       undefined,
-      noReject
+      noReject,
+      transportDetails
     );
   };
 
   addKeySync = (
     keypath: string | string[],
     value?: any,
-    noReject?: boolean
+    noReject?: boolean,
+    transportDetails?: boolean
   ) => {
     return this.sendType(
       "addKeySync",
       [convertToArray(keypath), value],
       undefined,
-      noReject
+      noReject,
+      transportDetails
     );
   };
 
   editKeySync = (
     keypath: string | string[],
     value?: any,
-    noReject?: boolean
+    noReject?: boolean,
+    transportDetails?: boolean
   ) => {
     return this.sendType(
       "editKeySync",
       [convertToArray(keypath), value],
       undefined,
-      noReject
+      noReject,
+      transportDetails
     );
   };
 
   editKeyAddSync = (
     keypath: string | string[],
     value?: any,
-    noReject?: boolean
+    noReject?: boolean,
+    transportDetails?: boolean
   ) => {
     return this.sendType(
       "editKeyAddSync",
       [convertToArray(keypath), value],
       undefined,
-      noReject
+      noReject,
+      transportDetails
     );
   };
 
-  deleteKeySync = (keypath: string | string[], noReject?: boolean) => {
+  deleteKeySync = (
+    keypath: string | string[],
+    noReject?: boolean,
+    transportDetails?: boolean
+  ) => {
     return this.sendType(
       "deleteKeySync",
       [convertToArray(keypath)],
       undefined,
-      noReject
+      noReject,
+      transportDetails
     );
   };
 }

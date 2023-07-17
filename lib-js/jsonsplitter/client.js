@@ -65,7 +65,7 @@ class jsonsplitterClient {
             });
         });
     }
-    sendType = async (type, parameters, stuff, noReject) => {
+    sendType = async (type, parameters, stuff, noReject, transportDetails) => {
         return new Promise((resolve, reject) => {
             this.sendWC({
                 ...(stuff ?? {}),
@@ -75,7 +75,7 @@ class jsonsplitterClient {
                 .then((r) => {
                 if (r.error && !noReject)
                     return reject(r.error);
-                resolve(r);
+                resolve(transportDetails ? r : r.response);
             })
                 .catch(reject);
         });
@@ -130,20 +130,20 @@ class jsonsplitterClient {
                 return args;
             }));
     };
-    getKeySync = (keypath, noReject) => {
-        return this.sendType("getKeySync", [(0, oberknecht_utils_1.convertToArray)(keypath)], undefined, noReject);
+    getKeySync = (keypath, noReject, transportDetails) => {
+        return this.sendType("getKeySync", [(0, oberknecht_utils_1.convertToArray)(keypath)], undefined, noReject, transportDetails);
     };
-    addKeySync = (keypath, value, noReject) => {
-        return this.sendType("addKeySync", [(0, oberknecht_utils_1.convertToArray)(keypath), value], undefined, noReject);
+    addKeySync = (keypath, value, noReject, transportDetails) => {
+        return this.sendType("addKeySync", [(0, oberknecht_utils_1.convertToArray)(keypath), value], undefined, noReject, transportDetails);
     };
-    editKeySync = (keypath, value, noReject) => {
-        return this.sendType("editKeySync", [(0, oberknecht_utils_1.convertToArray)(keypath), value], undefined, noReject);
+    editKeySync = (keypath, value, noReject, transportDetails) => {
+        return this.sendType("editKeySync", [(0, oberknecht_utils_1.convertToArray)(keypath), value], undefined, noReject, transportDetails);
     };
-    editKeyAddSync = (keypath, value, noReject) => {
-        return this.sendType("editKeyAddSync", [(0, oberknecht_utils_1.convertToArray)(keypath), value], undefined, noReject);
+    editKeyAddSync = (keypath, value, noReject, transportDetails) => {
+        return this.sendType("editKeyAddSync", [(0, oberknecht_utils_1.convertToArray)(keypath), value], undefined, noReject, transportDetails);
     };
-    deleteKeySync = (keypath, noReject) => {
-        return this.sendType("deleteKeySync", [(0, oberknecht_utils_1.convertToArray)(keypath)], undefined, noReject);
+    deleteKeySync = (keypath, noReject, transportDetails) => {
+        return this.sendType("deleteKeySync", [(0, oberknecht_utils_1.convertToArray)(keypath)], undefined, noReject, transportDetails);
     };
 }
 exports.jsonsplitterClient = jsonsplitterClient;
