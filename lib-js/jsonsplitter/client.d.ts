@@ -9,6 +9,7 @@ export declare class jsonsplitterClient {
     wsAddress: string;
     oberknechtEmitter: oberknechtEmitter;
     get wsMessageNum(): number;
+    get isConnected(): boolean;
     constructor(options: jsonsplitterClientOptions);
     on: (type: string, callback: typeof onCallback) => void;
     once: (type: string, callback: typeof onCallback) => void;

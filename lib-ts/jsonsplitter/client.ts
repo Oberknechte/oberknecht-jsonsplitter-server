@@ -15,6 +15,10 @@ export class jsonsplitterClient {
     return this.#wsMessageNum++;
   }
 
+  get isConnected() {
+    return this.wsClient.readyState === 1;
+  }
+
   constructor(options: jsonsplitterClientOptions) {
     let options_ = options ?? {};
     if (!options_.debug) options_.debug = 1;
