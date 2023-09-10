@@ -4,6 +4,7 @@ export type jsonsplitterServerOptions = jsonsplitteroptions & {
     serverWSPassword?: string | undefined;
     serverWSHeartbeatInterval?: number;
     serverWSMaxPendingPings?: number;
+    fullErrors?: boolean;
 };
 export declare const defaults: {
     serverWSPort: number;

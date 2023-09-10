@@ -148,5 +148,8 @@ class jsonsplitterClient {
     deleteKeySync = (keypath, noReject, transportDetails) => {
         return this.sendType("deleteKeySync", [(0, oberknecht_utils_1.convertToArray)(keypath)], undefined, noReject, transportDetails);
     };
+    recreateAllSync = () => {
+        return this.sendType("recreateAllSync");
+    };
 }
 exports.jsonsplitterClient = jsonsplitterClient;

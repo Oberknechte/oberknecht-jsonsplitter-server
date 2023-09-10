@@ -44,6 +44,7 @@ class jsonsplitterServer extends oberknecht_jsonsplitter_1.jsonsplitter {
             wsData[wsSym] = {
                 heartbeat: {},
             };
+            let this_ = this;
             function sendWC(stuff, status) {
                 let stuff_ = {};
                 if (typeof stuff === "object")
@@ -52,7 +53,7 @@ class jsonsplitterServer extends oberknecht_jsonsplitter_1.jsonsplitter {
                     stuff_.data = stuff;
                 stuff_.status = status ?? 200;
                 if (stuff?.error || stuff instanceof Error) {
-                    stuff_.error = (0, oberknecht_utils_1.returnErr)(stuff);
+                    stuff_.error = (0, oberknecht_utils_1.returnErr)(stuff, false, this_.wsServerOptions.fullErrors ?? false);
                     stuff_.status = status ?? 400;
                 }
                 ws.send(Buffer.from(JSON.stringify(stuff_)));
@@ -80,12 +81,12 @@ class jsonsplitterServer extends oberknecht_jsonsplitter_1.jsonsplitter {
                 catch (e) {
                     return sendWC({ error: Error("could not parse message as JSON") });
                 }
-                let parameters = message.parameters;
+                let parameters = (0, oberknecht_utils_1.convertToArray)(message.parameters);
                 let pass = message.pass;
                 let type = message.type;
                 if (!["login"].includes(type) && !wsData[wsSym].authorized)
                     return sendWC({
-                        error: Error("not authorized - login required"),
+                        error: Error("unauthorized - login required"),
                         parameters: parameters,
                         messageID: messageID,
                         type: type,
@@ -122,14 +123,14 @@ class jsonsplitterServer extends oberknecht_jsonsplitter_1.jsonsplitter {
                                 type: type,
                                 pass: pass,
                             });
-                        if (!Array.isArray(parameters))
-                            return sendWC({
-                                error: Error("key parameters has to be an array"),
-                                parameters: parameters,
-                                messageID: messageID,
-                                type: type,
-                                pass: pass,
-                            });
+                        // if (!Array.isArray(parameters))
+                        //   return sendWC({
+                        //     error: Error("key parameters has to be an array"),
+                        //     parameters: parameters,
+                        //     messageID: messageID,
+                        //     type: type,
+                        //     pass: pass,
+                        //   });
                         try {
                             let res = await func(...parameters);
                             return sendWC({

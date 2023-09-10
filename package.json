@@ -1,6 +1,6 @@
 {
   "name": "oberknecht-jsonsplitter-server",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "",
   "main": "export",
   "scripts": {
@@ -19,7 +19,7 @@
   "homepage": "https://github.com/jubewe/jsonsplitter-server#readme",
   "dependencies": {
     "oberknecht-emitters": "^1.0.6",
-    "oberknecht-jsonsplitter": "^1.1.0",
+    "oberknecht-jsonsplitter": "^1.1.3",
     "oberknecht-utils": "^1.4.3",
     "ws": "^8.13.0"
   },

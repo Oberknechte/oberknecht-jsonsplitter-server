@@ -24,5 +24,6 @@ export declare class jsonsplitterClient {
     editKeySync: (keypath: string | string[], value?: any, noReject?: boolean, transportDetails?: boolean) => Promise<unknown>;
     editKeyAddSync: (keypath: string | string[], value?: any, noReject?: boolean, transportDetails?: boolean) => Promise<unknown>;
     deleteKeySync: (keypath: string | string[], noReject?: boolean, transportDetails?: boolean) => Promise<unknown>;
+    recreateAllSync: () => Promise<unknown>;
 }
 export {};

@@ -243,4 +243,8 @@ export class jsonsplitterClient {
       transportDetails
     );
   };
+
+  recreateAllSync = () => {
+    return this.sendType("recreateAllSync");
+  };
 }
