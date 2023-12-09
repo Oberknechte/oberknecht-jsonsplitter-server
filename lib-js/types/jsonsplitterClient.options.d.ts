@@ -1,4 +1,4 @@
-export type jsonsplitterClientOptions = {
+export declare type jsonsplitterClientOptions = {
     serverWSAddress?: string;
     serverWSPort?: number;
     serverWSPassword?: string | undefined;

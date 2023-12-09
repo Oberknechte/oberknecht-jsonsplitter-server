@@ -36,7 +36,7 @@ class jsonsplitterClient {
     async sendWC(stuff, status, cb) {
         const messageID = `${this.wsMessageNum}`;
         let this_ = this;
-        if (this.wsClient.readyState === 0)
+        if (this.wsClient.readyState === 0) {
             await new Promise((resolve) => {
                 function waitTo() {
                     setTimeout(() => {
@@ -47,6 +47,10 @@ class jsonsplitterClient {
                 }
                 waitTo();
             });
+        }
+        else if (this.wsClient.readyState !== 1) {
+            await this.connectClient();
+        }
         let stuff_ = {};
         if (typeof stuff === "object")
             stuff_ = stuff;
@@ -96,35 +100,37 @@ class jsonsplitterClient {
         }, undefined, cb_);
     };
     async connectClient() {
-        this.wsAddress =
-            this.wsClientOptions.serverWSAddress ??
-                `ws${this.wsClientOptions.serverWSSecure ? "s" : ""}://127.0.0.1:${this.wsClientOptions.serverWSPort ?? jsonsplitterServer_options_1.defaults.serverWSPort}`;
-        let ws = (this.wsClient = new ws_1.WebSocket(this.wsAddress));
-        this.wsClient.on("open", () => {
-            if (this.wsClientOptions.debug > 1)
-                (0, oberknecht_utils_1.log)(1, `WSClient Opened WS Connection to ${this.wsAddress}`);
-            this.sendWC({
-                type: "login",
-                ...(this.wsClientOptions.serverWSPassword
-                    ? { password: this.wsClientOptions.serverWSPassword }
-                    : {}),
+        return new Promise(async (resolve, reject) => {
+            this.wsAddress =
+                this.wsClientOptions.serverWSAddress ??
+                    `ws${this.wsClientOptions.serverWSSecure ? "s" : ""}://127.0.0.1:${this.wsClientOptions.serverWSPort ?? jsonsplitterServer_options_1.defaults.serverWSPort}`;
+            let ws = (this.wsClient = new ws_1.WebSocket(this.wsAddress));
+            this.wsClient.on("open", () => {
+                if (this.wsClientOptions.debug > 1)
+                    (0, oberknecht_utils_1.log)(1, `WSClient Opened WS Connection to ${this.wsAddress}`);
+                this.sendWC({
+                    type: "login",
+                    ...(this.wsClientOptions.serverWSPassword
+                        ? { password: this.wsClientOptions.serverWSPassword }
+                        : {}),
+                }).then(resolve);
             });
-        });
-        this.wsClient.on("message", (rawMessage_) => {
-            const rawMessage = Buffer.from(rawMessage_.toString()).toString("utf-8");
-            if (!oberknecht_utils_1.regex.jsonreg().test(rawMessage))
-                return;
-            let message;
-            try {
-                message = JSON.parse(rawMessage);
-            }
-            catch (e) {
-                return;
-            }
-            if (message.messageID)
-                this.emit([`ws-message:${message.messageID}`], message);
-            if (message.pass)
-                this.emit([`ws-message-pass:${message.pass}`], message);
+            this.wsClient.on("message", (rawMessage_) => {
+                const rawMessage = Buffer.from(rawMessage_.toString()).toString("utf-8");
+                if (!oberknecht_utils_1.regex.jsonreg().test(rawMessage))
+                    return;
+                let message;
+                try {
+                    message = JSON.parse(rawMessage);
+                }
+                catch (e) {
+                    return;
+                }
+                if (message.messageID)
+                    this.emit([`ws-message:${message.messageID}`], message);
+                if (message.pass)
+                    this.emit([`ws-message-pass:${message.pass}`], message);
+            });
         });
     }
     createcb = (cb) => {

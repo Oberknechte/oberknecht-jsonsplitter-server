@@ -17,7 +17,7 @@ export declare class jsonsplitterClient {
     sendWC(stuff: Record<string, any> | any, status?: number, cb?: Function): Promise<unknown>;
     sendType: (type?: string, parameters?: any, stuff?: Record<string, any>, noReject?: boolean, transportDetails?: boolean) => Promise<unknown>;
     sendTypeSync: (type?: string, parameters?: any, stuff?: Record<string, any>, cb?: Function) => void;
-    connectClient(): Promise<void>;
+    connectClient(): Promise<unknown>;
     createcb: (cb: any) => any;
     getKeySync: (keypath: string | string[], noReject?: boolean, transportDetails?: boolean) => Promise<unknown>;
     addKeySync: (keypath: string | string[], value?: any, noReject?: boolean, transportDetails?: boolean) => Promise<unknown>;

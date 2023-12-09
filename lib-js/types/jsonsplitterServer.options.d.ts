@@ -1,5 +1,5 @@
 import { jsonsplitteroptions } from "oberknecht-jsonsplitter/lib-ts/types/jsonsplitter.options";
-export type jsonsplitterServerOptions = jsonsplitteroptions & {
+export declare type jsonsplitterServerOptions = jsonsplitteroptions & {
     serverWSPort?: number;
     serverWSPassword?: string | undefined;
     serverWSHeartbeatInterval?: number;

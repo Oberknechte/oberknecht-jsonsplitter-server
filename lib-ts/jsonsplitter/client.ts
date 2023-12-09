@@ -45,7 +45,7 @@ export class jsonsplitterClient {
     const messageID = `${this.wsMessageNum}`;
     let this_ = this;
 
-    if (this.wsClient.readyState === 0)
+    if (this.wsClient.readyState === 0) {
       await new Promise<void>((resolve) => {
         function waitTo() {
           setTimeout(() => {
@@ -56,6 +56,9 @@ export class jsonsplitterClient {
 
         waitTo();
       });
+    } else if (this.wsClient.readyState !== 1) {
+      await this.connectClient();
+    }
 
     let stuff_: Record<string, any> = {};
     if (typeof stuff === "object") stuff_ = stuff;
@@ -125,40 +128,45 @@ export class jsonsplitterClient {
   };
 
   async connectClient() {
-    this.wsAddress =
-      this.wsClientOptions.serverWSAddress ??
-      `ws${this.wsClientOptions.serverWSSecure ? "s" : ""}://127.0.0.1:${
-        this.wsClientOptions.serverWSPort ?? defaults.serverWSPort
-      }`;
+    return new Promise(async (resolve, reject) => {
+      this.wsAddress =
+        this.wsClientOptions.serverWSAddress ??
+        `ws${this.wsClientOptions.serverWSSecure ? "s" : ""}://127.0.0.1:${
+          this.wsClientOptions.serverWSPort ?? defaults.serverWSPort
+        }`;
 
-    let ws = (this.wsClient = new WebSocket(this.wsAddress));
+      let ws = (this.wsClient = new WebSocket(this.wsAddress));
 
-    this.wsClient.on("open", () => {
-      if (this.wsClientOptions.debug > 1)
-        log(1, `WSClient Opened WS Connection to ${this.wsAddress}`);
+      this.wsClient.on("open", () => {
+        if (this.wsClientOptions.debug > 1)
+          log(1, `WSClient Opened WS Connection to ${this.wsAddress}`);
 
-      this.sendWC({
-        type: "login",
-        ...(this.wsClientOptions.serverWSPassword
-          ? { password: this.wsClientOptions.serverWSPassword }
-          : {}),
+        this.sendWC({
+          type: "login",
+          ...(this.wsClientOptions.serverWSPassword
+            ? { password: this.wsClientOptions.serverWSPassword }
+            : {}),
+        }).then(resolve);
       });
-    });
 
-    this.wsClient.on("message", (rawMessage_) => {
-      const rawMessage = Buffer.from(rawMessage_.toString()).toString("utf-8");
+      this.wsClient.on("message", (rawMessage_) => {
+        const rawMessage = Buffer.from(rawMessage_.toString()).toString(
+          "utf-8"
+        );
 
-      if (!regex.jsonreg().test(rawMessage)) return;
-      let message;
-      try {
-        message = JSON.parse(rawMessage);
-      } catch (e) {
-        return;
-      }
+        if (!regex.jsonreg().test(rawMessage)) return;
+        let message;
+        try {
+          message = JSON.parse(rawMessage);
+        } catch (e) {
+          return;
+        }
 
-      if (message.messageID)
-        this.emit([`ws-message:${message.messageID}`], message);
-      if (message.pass) this.emit([`ws-message-pass:${message.pass}`], message);
+        if (message.messageID)
+          this.emit([`ws-message:${message.messageID}`], message);
+        if (message.pass)
+          this.emit([`ws-message-pass:${message.pass}`], message);
+      });
     });
   }
 
